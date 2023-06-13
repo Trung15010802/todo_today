@@ -22,10 +22,7 @@ class HomeScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: todos.length,
             itemBuilder: (context, index) {
-              return BlocProvider<TodoBloc>.value(
-                value: context.read<TodoBloc>(),
-                child: TodoItem(todo: todos[index]),
-              );
+              return TodoItem(todo: todos[index]);
             },
           );
         }

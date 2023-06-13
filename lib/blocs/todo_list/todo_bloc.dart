@@ -38,7 +38,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Future<FutureOr<void>> _toggleStatus(
       TodoToggleStatus event, Emitter<TodoState> emit) async {
-    await todoRepository.updateTodo(event.newTodo.copyWith());
+    await todoRepository.updateTodo(event.newTodo);
     var todos = await todoRepository.getAllTodo();
     emit(TodoLoaded(todos!));
   }
