@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_today/blocs/bottom_nav/bottom_nav_bloc.dart';
-import 'package:todo_today/blocs/todo_list/todo_bloc.dart';
-import 'package:todo_today/model/todo.dart';
-import 'package:todo_today/screens/setting_screen.dart';
-import 'package:todo_today/screens/stats_screen.dart';
+import '../blocs/bottom_nav/bottom_nav_bloc.dart';
+import '../blocs/todo/todo_bloc.dart';
+import '../model/todo.dart';
+import 'setting_screen.dart';
+import 'stats_screen.dart';
 
 import 'home_screen.dart';
 
@@ -14,6 +14,7 @@ class TabScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
@@ -94,95 +95,101 @@ class _AddNewTodoFormState extends State<AddNewTodoForm> {
   String? description;
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height / 2,
-        child: Column(
-          children: [
-            const Text(
-              'Add new todo',
-              style: TextStyle(fontSize: 24),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                style: const TextStyle(fontSize: 24),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.all(10),
-                  hintText: 'Input title',
-                  label: const Text(
-                    'Title',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Title cannot be empty';
-                  }
-                  return null;
-                },
-                onSaved: (newValue) => title = newValue!,
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height / 2,
+          child: Column(
+            children: [
+              const Text(
+                'Add new todo',
+                style: TextStyle(fontSize: 24),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                style: const TextStyle(fontSize: 24),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.all(10),
-                  hintText: 'Input title',
-                  label: const Text(
-                    'Description',
-                    style: TextStyle(fontSize: 24),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  style: const TextStyle(fontSize: 24),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(10),
+                    hintText: 'Input title',
+                    label: const Text(
+                      'Title',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onSaved: (newValue) => description = newValue,
-              ),
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(fontSize: 26),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      final todo = Todo(
-                          title: title,
-                          description: description,
-                          date: DateTime.now());
-                      context
-                          .read<TodoBloc>()
-                          .add(TodoAddButtonPressed(todo: todo));
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Title cannot be empty';
                     }
+                    return null;
                   },
-                  child: const Text(
-                    'Confirm',
-                    style: TextStyle(fontSize: 26),
-                  ),
+                  onSaved: (newValue) => title = newValue!,
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            )
-          ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  maxLines: 3,
+                  style: const TextStyle(fontSize: 24),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(10),
+                    hintText: 'Input description',
+                    label: const Text(
+                      'Description',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onSaved: (newValue) => description = newValue,
+                ),
+              ),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 26),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        final todo = Todo(
+                            title: title,
+                            description: description,
+                            date: DateTime.now());
+                        context
+                            .read<TodoBloc>()
+                            .add(TodoAddButtonPressed(todo: todo));
+
+                        FocusScope.of(context).unfocus();
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(fontSize: 26),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              )
+            ],
+          ),
         ),
       ),
     );

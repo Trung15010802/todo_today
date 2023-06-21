@@ -35,6 +35,31 @@ class TodoRepository {
     );
   }
 
+  Future<void> deleteTodo(Todo todo) async {
+    final db = await _getDb();
+    await db.delete(
+      'Todos',
+      where: 'id = ?',
+      whereArgs: [todo.id],
+    );
+  }
+
+  Future<List<Todo>?> searchTodoByTitle(String keyword) async {
+    final db = await _getDb();
+    var maps = await db.query(
+      'Todos',
+      where: 'title LIKE ?',
+      whereArgs: ['%$keyword%'],
+    );
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(
+      maps.length,
+      (index) => Todo.fromMap(maps[index]),
+    );
+  }
+
   Future<List<Todo>?> getAllTodo() async {
     final db = await _getDb();
     var maps = await db.query('Todos');
@@ -47,5 +72,30 @@ class TodoRepository {
         maps[index],
       ),
     );
+  }
+
+  Future<List<Todo>?> getTodoByCompletionStatus(bool isCompleted) async {
+    final db = await _getDb();
+    var maps = await db.query(
+      'Todos',
+      where: 'isCompleted = ?',
+      whereArgs: [isCompleted ? 1 : 0], // 1: true, 0: false
+    );
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(
+      maps.length,
+      (index) => Todo.fromMap(maps[index]),
+    );
+  }
+
+  Future<int> countTodoByCompletedStatus(bool isCompleted) async {
+    final db = await _getDb();
+    String sql =
+        'SELECT COUNT(*) FROM Todos WHERE isCompleted = ${isCompleted ? 1 : 0}';
+    final result = await db.rawQuery(sql);
+
+    return Sqflite.firstIntValue(result) ?? 0;
   }
 }

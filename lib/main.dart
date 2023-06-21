@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_today/blocs/todo_list/todo_bloc.dart';
-import 'package:todo_today/data/todo_repository.dart';
-import 'package:todo_today/themes/color_schemes.g.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'blocs/todo/todo_bloc.dart';
+import 'data/todo_repository.dart';
+import 'themes/color_schemes.g.dart';
 
 import 'blocs/bottom_nav/bottom_nav_bloc.dart';
 import 'screens/tab_screen.dart';
@@ -16,20 +17,36 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => BottomNavBloc(),
-      child: RepositoryProvider(
-        create: (context) => TodoRepository(),
-        child: BlocProvider(
-          create: (context) => TodoBloc(
-            todoRepository: context.read<TodoRepository>(),
+    return RepositoryProvider(
+      create: (context) => TodoRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => BottomNavBloc(),
           ),
-          child: MaterialApp(
-            theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-            darkTheme:
-                ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-            home: const TabScreen(),
+          RepositoryProvider(
+            create: (context) => TodoRepository(),
           ),
+          BlocProvider(
+            create: (context) => TodoBloc(
+              todoRepository: context.read<TodoRepository>(),
+            )..add(
+                TodoGetAll(),
+              ),
+          ),
+        ],
+        child: MaterialApp(
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: lightColorScheme,
+            textTheme: GoogleFonts.aBeeZeeTextTheme(),
+          ),
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            colorScheme: darkColorScheme,
+            textTheme: GoogleFonts.aBeeZeeTextTheme(),
+          ),
+          home: const TabScreen(),
         ),
       ),
     );
