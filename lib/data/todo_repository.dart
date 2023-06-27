@@ -44,7 +44,7 @@ class TodoRepository {
     );
   }
 
-  Future<List<Todo>?> searchTodoByTitle(String keyword) async {
+  Future<List<Todo>> searchTodoByTitle(String keyword) async {
     final db = await _getDb();
     var maps = await db.query(
       'Todos',
@@ -52,7 +52,7 @@ class TodoRepository {
       whereArgs: ['%$keyword%'],
     );
     if (maps.isEmpty) {
-      return null;
+      return [];
     }
     return List.generate(
       maps.length,
@@ -60,11 +60,11 @@ class TodoRepository {
     );
   }
 
-  Future<List<Todo>?> getAllTodo() async {
+  Future<List<Todo>> getAllTodo() async {
     final db = await _getDb();
     var maps = await db.query('Todos');
     if (maps.isEmpty) {
-      return null;
+      return [];
     }
     return List.generate(
       maps.length,
@@ -74,15 +74,25 @@ class TodoRepository {
     );
   }
 
-  Future<List<Todo>?> getTodoByCompletionStatus(bool isCompleted) async {
+  Future<Todo> getTodo(Todo todo) async {
     final db = await _getDb();
-    var maps = await db.query(
+    final result = await db.query(
       'Todos',
-      where: 'isCompleted = ?',
-      whereArgs: [isCompleted ? 1 : 0], // 1: true, 0: false
+      where: 'id = ?',
+      whereArgs: [todo.id],
     );
+
+    return Todo.fromMap(result.first);
+  }
+
+  Future<List<Todo>> getTodoByCompletionStatus(
+      bool isCompleted, DateTime dateTime) async {
+    final db = await _getDb();
+    String sql =
+        'SELECT * FROM Todos WHERE isCompleted = ${isCompleted ? 1 : 0} AND date = ${dateTime.millisecondsSinceEpoch}';
+    var maps = await db.rawQuery(sql);
     if (maps.isEmpty) {
-      return null;
+      return [];
     }
     return List.generate(
       maps.length,
@@ -90,12 +100,34 @@ class TodoRepository {
     );
   }
 
-  Future<int> countTodoByCompletedStatus(bool isCompleted) async {
+  Future<int> countTodoByCompletedStatus(bool isCompleted,
+      {DateTime? dateTime}) async {
     final db = await _getDb();
     String sql =
         'SELECT COUNT(*) FROM Todos WHERE isCompleted = ${isCompleted ? 1 : 0}';
+
+    if (dateTime != null) {
+      sql += " AND date = '${dateTime.millisecondsSinceEpoch}'";
+    }
     final result = await db.rawQuery(sql);
 
     return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  Future<List<Todo>> getTodoByDate(DateTime dateTime) async {
+    final db = await _getDb();
+    var maps = await db.query(
+      'Todos',
+      where: 'date = ?',
+      whereArgs: [dateTime.millisecondsSinceEpoch],
+    );
+
+    if (maps.isEmpty) {
+      return [];
+    }
+    return List.generate(
+      maps.length,
+      (index) => Todo.fromMap(maps[index]),
+    );
   }
 }

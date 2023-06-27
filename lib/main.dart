@@ -31,7 +31,12 @@ class MyApp extends StatelessWidget {
             create: (context) => TodoBloc(
               todoRepository: context.read<TodoRepository>(),
             )..add(
-                TodoGetAll(),
+                TodoGetAll(
+                    date: DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                )),
               ),
           ),
         ],

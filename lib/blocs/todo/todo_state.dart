@@ -23,6 +23,13 @@ class TodoLoaded extends TodoState {
   List<Object> get props => [todos, todoListType];
 }
 
+class TodoDetailTodo extends TodoState {
+  final Todo todo;
+  const TodoDetailTodo({
+    required this.todo,
+  });
+}
+
 class TodoError extends TodoState {
   final String errorMessage;
 

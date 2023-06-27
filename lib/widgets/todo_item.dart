@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_today/screens/todo_detail_screen.dart';
 
 import '../blocs/todo/todo_bloc.dart';
 import '../model/todo.dart';
@@ -22,6 +23,7 @@ class TodoItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         leading: Checkbox(
+          shape: const CircleBorder(),
           value: todo.isCompleted,
           onChanged: (value) {
             context.read<TodoBloc>().add(
@@ -37,7 +39,7 @@ class TodoItem extends StatelessWidget {
           ),
         ),
         trailing: IconButton(
-          color: Colors.red,
+          color: Theme.of(context).colorScheme.error,
           icon: const Icon(Icons.delete),
           onPressed: () {
             context.read<TodoBloc>().add(
@@ -45,6 +47,14 @@ class TodoItem extends StatelessWidget {
                 );
           },
         ),
+        onTap: () {
+          context.read<TodoBloc>().add(
+                TodoDisplayDetail(todo: todo),
+              );
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const TodoDetailScreen(),
+          ));
+        },
       ),
     );
   }

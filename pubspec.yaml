@@ -14,6 +14,7 @@ dependencies:
   google_fonts: ^5.1.0
   path: ^1.8.3
   path_provider: ^2.0.15
+  percent_indicator: ^4.2.3
   sqflite: ^2.2.8+4
 
 dev_dependencies:
@@ -23,3 +24,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/
+
+

@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/todo/todo_bloc.dart';
-import '../widgets/todo_item.dart';
+import '../widgets/todo_list.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final DateTime today;
+  @override
+  void didChangeDependencies() {
+    DateTime now = DateTime.now();
+    today = DateTime(now.year, now.month, now.day);
+    context.read<TodoBloc>().add(TodoGetByDate(dateTime: today));
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,79 +39,43 @@ class HomeScreen extends StatelessWidget {
               }
               if (state is TodoError) {
                 return const Center(
-                  child: Text('An error has occured'),
+                  child: Text('An error has occurred'),
                 );
               }
               if (state is TodoLoaded) {
-                debugPrint(state.todoListType.toString());
-                return RefreshIndicator(
-                  onRefresh: () async =>
-                      context.read<TodoBloc>().add(TodoRefreshList()),
-                  child: state.todos.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text('Cannot find any todo!'),
-                              ElevatedButton(
-                                onPressed: () {
-                                  context
-                                      .read<TodoBloc>()
-                                      .add(TodoRefreshList());
-                                },
-                                child: const Text('Reload list'),
-                              )
-                            ],
-                          ),
-                        )
-                      : Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                ChoiceChip(
-                                  label: const Text('All'),
-                                  selected:
-                                      state.todoListType == TodoListType.all,
-                                  onSelected: (value) {
-                                    context.read<TodoBloc>().add(TodoGetAll());
-                                  },
-                                ),
-                                ChoiceChip(
-                                  label: const Text('Completed'),
-                                  selected: state.todoListType ==
-                                      TodoListType.complete,
-                                  onSelected: (value) {
-                                    context.read<TodoBloc>().add(
-                                          const TodoFilterList(
-                                              isCompleted: true),
-                                        );
-                                  },
-                                ),
-                                ChoiceChip(
-                                  label: const Text('Uncompleted'),
-                                  selected: state.todoListType ==
-                                      TodoListType.uncomplete,
-                                  onSelected: (value) {
-                                    context.read<TodoBloc>().add(
-                                        const TodoFilterList(
-                                            isCompleted: false));
-                                  },
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: state.todos.length,
-                                itemBuilder: (context, index) {
-                                  return TodoItem(
-                                    todo: state.todos[index],
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                return Column(
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      child: TodoList(
+                        todos: state.todos,
+                        todoListType: state.todoListType,
+                        onRefresh: () {
+                          context
+                              .read<TodoBloc>()
+                              .add(TodoRefreshList(dateTime: today));
+                        },
+                        onFilterAll: () {
+                          context.read<TodoBloc>().add(TodoGetAll(date: today));
+                        },
+                        onFilterComplete: () {
+                          context.read<TodoBloc>().add(TodoFilterList(
+                              isCompleted: true, dateTime: today));
+                        },
+                        onFilterUncomplete: () {
+                          context.read<TodoBloc>().add(TodoFilterList(
+                              isCompleted: false, dateTime: today));
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: state.todos.isEmpty,
+                      child: const Expanded(
+                        flex: 2,
+                        child: Text("There is no todo here yet"),
+                      ),
+                    ),
+                  ],
                 );
               }
               return Container();
@@ -111,8 +89,8 @@ class HomeScreen extends StatelessWidget {
 
 class SearchBar extends StatefulWidget {
   const SearchBar({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SearchBar> createState() => _SearchBarState();
@@ -120,11 +98,13 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   final _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       child: TextField(
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         controller: _controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(
