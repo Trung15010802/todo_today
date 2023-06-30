@@ -5,9 +5,11 @@ import '../blocs/todo/todo_bloc.dart';
 import '../model/todo.dart';
 
 class TodoForm extends StatefulWidget {
+  final Todo? todo;
   const TodoForm({
-    super.key,
-  });
+    Key? key,
+    this.todo,
+  }) : super(key: key);
 
   @override
   State<TodoForm> createState() => _TodoFormState();
@@ -26,14 +28,20 @@ class _TodoFormState extends State<TodoForm> {
           height: MediaQuery.of(context).size.height / 2,
           child: Column(
             children: [
-              const Text(
+              Text(
                 'Add new todo',
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  style: const TextStyle(fontSize: 24),
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(10),
                     hintText: 'Input title',
@@ -52,25 +60,32 @@ class _TodoFormState extends State<TodoForm> {
                     return null;
                   },
                   onSaved: (newValue) => title = newValue!,
+                  initialValue: widget.todo?.title ?? '',
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   maxLines: 3,
-                  style: const TextStyle(fontSize: 24),
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(10),
                     hintText: 'Input description',
                     label: const Text(
                       'Description',
-                      style: TextStyle(fontSize: 24),
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   onSaved: (newValue) => description = newValue,
+                  initialValue: widget.todo?.description ?? '',
                 ),
               ),
               const Spacer(),
@@ -92,14 +107,22 @@ class _TodoFormState extends State<TodoForm> {
                       DateTime today = DateTime(now.year, now.month, now.day);
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        final todo = Todo(
-                          title: title,
-                          description: description,
-                          date: today,
-                        );
-                        context
-                            .read<TodoBloc>()
-                            .add(TodoAddButtonPressed(todo: todo));
+                        final Todo newTodo;
+                        if (widget.todo != null) {
+                          newTodo = widget.todo!.copyWith(
+                            title: title,
+                            description: description,
+                          );
+                        } else {
+                          newTodo = Todo(
+                            title: title,
+                            description: description,
+                            date: today,
+                          );
+                        }
+                        context.read<TodoBloc>().add(
+                              TodoAddButtonPressed(todo: newTodo),
+                            );
 
                         FocusScope.of(context).unfocus();
                         Navigator.of(context).pop();

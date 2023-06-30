@@ -18,7 +18,7 @@ class TodoItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(6),
       child: ListTile(
-        tileColor: Theme.of(context).colorScheme.primaryContainer,
+        tileColor: Theme.of(context).colorScheme.tertiaryContainer,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -33,9 +33,11 @@ class TodoItem extends StatelessWidget {
         ),
         title: Text(
           ' ${todo.title.toUpperCase()}',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            color: Theme.of(context).colorScheme.onTertiaryContainer,
           ),
         ),
         trailing: IconButton(
@@ -51,9 +53,11 @@ class TodoItem extends StatelessWidget {
           context.read<TodoBloc>().add(
                 TodoDisplayDetail(todo: todo),
               );
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const TodoDetailScreen(),
-          ));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const TodoDetailScreen(),
+            ),
+          );
         },
       ),
     );

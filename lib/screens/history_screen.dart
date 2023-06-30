@@ -70,7 +70,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               );
             }
-            return Image.asset('assets/empty.jpg');
+            return Column(
+              children: [
+                Image.asset('assets/background.jpg'),
+              ],
+            );
           },
         )
       ],

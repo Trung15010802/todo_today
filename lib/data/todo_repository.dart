@@ -16,13 +16,18 @@ class TodoRepository {
     );
   }
 
-  Future<int> addTodo(Todo todo) async {
+  Future<void> addTodo(Todo todo) async {
     final db = await _getDb();
-    return db.insert(
-      'Todos',
-      todo.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    bool isTodoExist = await checkTodoExist(todo);
+    if (isTodoExist) {
+      updateTodo(todo);
+    } else {
+      db.insert(
+        'Todos',
+        todo.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
   }
 
   Future<void> updateTodo(Todo todo) async {
@@ -81,8 +86,23 @@ class TodoRepository {
       where: 'id = ?',
       whereArgs: [todo.id],
     );
-
     return Todo.fromMap(result.first);
+  }
+
+  Future<bool> checkTodoExist(Todo todo) async {
+    final db = await _getDb();
+
+    try {
+      await db.query(
+        'Todos',
+        where: 'id = ?',
+        whereArgs: [todo.id],
+      );
+    } on Exception catch (_) {
+      return false;
+    }
+
+    return true;
   }
 
   Future<List<Todo>> getTodoByCompletionStatus(

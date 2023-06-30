@@ -37,7 +37,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   Future<FutureOr<void>> _addTodo(
       TodoAddButtonPressed event, Emitter<TodoState> emit) async {
     await todoRepository.addTodo(event.todo);
-    await _reloadList(emit, event.todo.date);
+    if (event.todo.id != null) {
+      // emit(TodoLoading());
+
+      emit(TodoDetailTodo(todo: event.todo));
+    } else {
+      await _reloadList(emit, event.todo.date);
+    }
   }
 
   Future<FutureOr<void>> _getAll(

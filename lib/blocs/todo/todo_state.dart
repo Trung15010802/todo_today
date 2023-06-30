@@ -28,6 +28,9 @@ class TodoDetailTodo extends TodoState {
   const TodoDetailTodo({
     required this.todo,
   });
+
+  @override
+  List<Object> get props => [todo];
 }
 
 class TodoError extends TodoState {
