@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:todo_today/blocs/theme/theme_bloc.dart';
+import 'package:todo_today/themes/theme_data.dart';
 import 'blocs/todo/todo_bloc.dart';
 import 'data/todo_repository.dart';
-import 'themes/color_schemes.g.dart';
 
 import 'blocs/bottom_nav/bottom_nav_bloc.dart';
 import 'screens/tab_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: await getApplicationDocumentsDirectory(),
+  );
   runApp(const MyApp());
 }
 
@@ -22,6 +28,9 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+            create: (context) => ThemeBloc(),
+          ),
+          BlocProvider(
             create: (context) => BottomNavBloc(),
           ),
           RepositoryProvider(
@@ -32,26 +41,24 @@ class MyApp extends StatelessWidget {
               todoRepository: context.read<TodoRepository>(),
             )..add(
                 TodoGetAll(
-                    date: DateTime(
-                  DateTime.now().year,
-                  DateTime.now().month,
-                  DateTime.now().day,
-                )),
+                  date: DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day,
+                  ),
+                ),
               ),
           ),
         ],
-        child: MaterialApp(
-          theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: lightColorScheme,
-            textTheme: GoogleFonts.aBeeZeeTextTheme(),
-          ),
-          darkTheme: ThemeData(
-            useMaterial3: true,
-            colorScheme: darkColorScheme,
-            textTheme: GoogleFonts.aBeeZeeTextTheme(),
-          ),
-          home: const TabScreen(),
+        child: BlocBuilder<ThemeBloc, ThemeState>(
+          builder: (context, state) {
+            return MaterialApp(
+              themeMode: state.themeMode,
+              theme: appThemeData[AppTheme.light],
+              darkTheme: appThemeData[AppTheme.dark],
+              home: const TabScreen(),
+            );
+          },
         ),
       ),
     );

@@ -70,9 +70,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Visibility(
                       visible: state.todos.isEmpty,
-                      child: const Expanded(
+                      child: Expanded(
                         flex: 2,
-                        child: Text("There is no todo here yet"),
+                        child: Text(
+                          "There is no todo here yet!",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                        ),
                       ),
                     ),
                   ],

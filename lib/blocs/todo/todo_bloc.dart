@@ -38,8 +38,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       TodoAddButtonPressed event, Emitter<TodoState> emit) async {
     await todoRepository.addTodo(event.todo);
     if (event.todo.id != null) {
-      // emit(TodoLoading());
-
       emit(TodoDetailTodo(todo: event.todo));
     } else {
       await _reloadList(emit, event.todo.date);
