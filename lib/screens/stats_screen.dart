@@ -39,6 +39,7 @@ class StatsScreen extends StatelessWidget {
                     fontSize: 24,
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 PieChartTodo(
                   countTodoCompleted: countTodoCompletedToday,
@@ -50,6 +51,7 @@ class StatsScreen extends StatelessWidget {
                     fontSize: 24,
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 PieChartTodo(
                   countTodoCompleted: countTodoCompleted,

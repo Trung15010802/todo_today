@@ -115,8 +115,8 @@ class _TodoFormState extends State<TodoForm> {
                           );
                         } else {
                           newTodo = Todo(
-                            title: title,
-                            description: description,
+                            title: title.trim(),
+                            description: description?.trim(),
                             date: today,
                           );
                         }

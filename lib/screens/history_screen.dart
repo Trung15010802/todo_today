@@ -17,31 +17,33 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ElevatedButton(
-          onPressed: () async {
-            date = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(
-                DateTime.now().year + 1,
-              ),
-              helpText: 'Select your history todo date!',
-            );
+        Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              date = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(
+                  DateTime.now().year + 1,
+                ),
+                helpText: 'Select your history todo date!',
+              );
 
-            if (context.mounted && date != null) {
-              context.read<TodoBloc>().add(TodoGetByDate(dateTime: date!));
-            }
-          },
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.date_range),
-              SizedBox(
-                width: 5,
-              ),
-              Text('Choose Date'),
-            ],
+              if (context.mounted && date != null) {
+                context.read<TodoBloc>().add(TodoGetByDate(dateTime: date!));
+              }
+            },
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.date_range),
+                SizedBox(
+                  width: 5,
+                ),
+                Text('Choose Date'),
+              ],
+            ),
           ),
         ),
         BlocBuilder<TodoBloc, TodoState>(
@@ -70,11 +72,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               );
             }
-            return const Column(
-              children: [
-                Image(image: AssetImage('assets/background.jpg')),
-              ],
-            );
+            return Image.asset('assets/empty.png');
           },
         )
       ],

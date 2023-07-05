@@ -1,6 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:todo_today/model/todo.dart';
+
+import '../blocs/schedule/schedule_bloc.dart';
 import '../blocs/todo/todo_bloc.dart';
 import '../widgets/todo_form.dart';
 
@@ -29,8 +34,8 @@ class TodoDetailScreen extends StatelessWidget {
             child: Scaffold(
               backgroundColor: Theme.of(context).colorScheme.background,
               appBar: AppBar(
-                title: const Text('Todo '),
-                centerTitle: true,
+                title: const Text('Todo'),
+                centerTitle: false,
                 elevation: 4,
                 actions: [
                   TextButton(
@@ -84,11 +89,92 @@ class TodoDetailScreen extends StatelessWidget {
                   );
                 },
               ),
+              floatingActionButton: ScheduleWidget(
+                todo: state.todo,
+              ),
             ),
           );
         }
 
         return Container();
+      },
+    );
+  }
+}
+
+class ScheduleWidget extends StatefulWidget {
+  final Todo todo;
+  const ScheduleWidget({
+    Key? key,
+    required this.todo,
+  }) : super(key: key);
+
+  @override
+  State<ScheduleWidget> createState() => _ScheduleWidgetState();
+}
+
+class _ScheduleWidgetState extends State<ScheduleWidget> {
+  @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ScheduleBloc, ScheduleState>(
+      builder: (context, state) {
+        DateTime now = DateTime.now();
+        DateTime today = DateTime(now.year, now.month, now.day);
+        debugPrint(state.toString());
+        bool hasSchedule = state is! ScheduleDisable;
+
+        return Visibility(
+          visible: widget.todo.date.isAtSameMomentAs(today),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                heroTag: null,
+                onPressed: () async {
+                  var time = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+
+                  if (time != null && context.mounted) {
+                    context.read<ScheduleBloc>().add(
+                          ScheduleSetTimer(
+                            todo: widget.todo,
+                            time: time,
+                          ),
+                        );
+                  }
+                },
+                child: const Icon(Icons.schedule),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Visibility(
+                visible: hasSchedule,
+                child: FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () {
+                    context
+                        .read<ScheduleBloc>()
+                        .add(ScheduleCancel(id: widget.todo.id!));
+                  },
+                  child: const Icon(Icons.cancel_schedule_send),
+                ),
+              ),
+            ],
+          ),
+        );
       },
     );
   }

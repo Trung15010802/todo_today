@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:todo_today/widgets/todo_item.dart';
 
 import '../blocs/todo/todo_bloc.dart';
@@ -69,7 +70,7 @@ class TodoList extends StatelessWidget {
           Visibility(
             visible: todos.isEmpty,
             child: Center(
-              child: Image.asset('assets/empty.jpg'),
+              child: Lottie.asset('assets/todo.json'),
             ),
           ),
           Expanded(

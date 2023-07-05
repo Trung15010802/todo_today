@@ -16,19 +16,15 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> with HydratedMixin {
 
   @override
   ThemeState? fromJson(Map<String, dynamic> json) {
-    debugPrint('Theme state from storage $json');
     final themeState = ThemeState.fromJson(json);
 
-    debugPrint('ThemeState: $themeState');
     return themeState;
   }
 
   @override
   Map<String, dynamic>? toJson(ThemeState state) {
-    debugPrint('Theme state to storage $state');
     final stateJson = state.toJson();
 
-    debugPrint('ThemeStateJson: $stateJson');
     return stateJson;
   }
 }
