@@ -15,50 +15,71 @@ class TodoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(6),
-      child: ListTile(
-        tileColor: Theme.of(context).colorScheme.tertiaryContainer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        leading: Checkbox(
-          shape: const CircleBorder(),
-          value: todo.isCompleted,
-          onChanged: (value) {
-            context.read<TodoBloc>().add(
-                  TodoUpdate(todo.copyWith(isCompleted: value)),
-                );
-          },
-        ),
-        title: Text(
-          ' ${todo.title.toUpperCase()}',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
-            color: Theme.of(context).colorScheme.onTertiaryContainer,
+    return Dismissible(
+      direction: DismissDirection.endToStart,
+      key: ValueKey(todo.id),
+      onDismissed: (_) {
+        context.read<TodoBloc>().add(
+              TodoDelete(todo: todo),
+            );
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Todo was deleted!'),
+          ),
+        );
+      },
+      background: Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+              color: Colors.red,
+            ),
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
           ),
         ),
-        trailing: IconButton(
-          color: Theme.of(context).colorScheme.error,
-          icon: const Icon(Icons.delete),
-          onPressed: () {
+      ),
+      child: Container(
+        margin: const EdgeInsets.all(6),
+        child: ListTile(
+          tileColor: Theme.of(context).colorScheme.tertiaryContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          leading: Checkbox(
+            shape: const CircleBorder(),
+            value: todo.isCompleted,
+            onChanged: (value) {
+              context.read<TodoBloc>().add(
+                    TodoUpdate(todo.copyWith(isCompleted: value)),
+                  );
+            },
+          ),
+          title: Text(
+            ' ${todo.title.toUpperCase()}',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
+              color: Theme.of(context).colorScheme.onTertiaryContainer,
+            ),
+          ),
+          onTap: () {
             context.read<TodoBloc>().add(
-                  TodoDelete(todo: todo),
+                  TodoDisplayDetail(todo: todo),
                 );
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const TodoDetailScreen(),
+              ),
+            );
           },
         ),
-        onTap: () {
-          context.read<TodoBloc>().add(
-                TodoDisplayDetail(todo: todo),
-              );
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const TodoDetailScreen(),
-            ),
-          );
-        },
       ),
     );
   }

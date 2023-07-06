@@ -21,6 +21,34 @@ class TabScreen extends StatelessWidget {
           'Todo Today',
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.info,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("How to delete a task"),
+                    content: const Text(
+                        "Swipe from right to left to delete a task.\nTap on a todo to view details."),
+                    actions: [
+                      TextButton(
+                        child: const Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       bottomNavigationBar: BlocBuilder<BottomNavBloc, BottomNavState>(

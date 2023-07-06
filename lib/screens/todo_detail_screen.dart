@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -130,7 +129,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
       builder: (context, state) {
         DateTime now = DateTime.now();
         DateTime today = DateTime(now.year, now.month, now.day);
-        debugPrint(state.toString());
+
         bool hasSchedule = state is! ScheduleDisable;
 
         return Visibility(
@@ -153,6 +152,9 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                             time: time,
                           ),
                         );
+
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Set up reminder successfully!')));
                   }
                 },
                 child: const Icon(Icons.schedule),
@@ -168,6 +170,8 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                     context
                         .read<ScheduleBloc>()
                         .add(ScheduleCancel(id: widget.todo.id!));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Canncel reminder successfully!')));
                   },
                   child: const Icon(Icons.cancel_schedule_send),
                 ),

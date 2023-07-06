@@ -31,7 +31,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       content: NotificationContent(
         id: todo.id!,
         channelKey: 'basic_channel',
-        title: 'Todo Today',
+        title: 'Todo Today ${Emojis.hand_backhand_index_pointing_down}',
         body: todo.title,
       ),
       schedule: NotificationCalendar.fromDate(
