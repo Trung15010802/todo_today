@@ -33,9 +33,14 @@ class TabScreen extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text("Tutorial"),
-                    content: const Text(
-                        "Swipe from right to left to delete a task.\nTap on a todo to view details."),
+                    title: Text(
+                      "Tutorial",
+                      style: TextStyle(color: colorScheme.onBackground),
+                    ),
+                    content: Text(
+                      "Swipe from right to left to delete a task.\nTap on a todo to view details.",
+                      style: TextStyle(color: colorScheme.onBackground),
+                    ),
                     actions: [
                       TextButton(
                         child: const Text("Close"),
