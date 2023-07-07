@@ -32,16 +32,14 @@ class TodoItem extends StatelessWidget {
       },
       background: Padding(
         padding: const EdgeInsets.all(6.0),
-        child: Expanded(
-          child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-              color: Colors.red,
-            ),
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
-            ),
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+            color: Colors.red,
+          ),
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
           ),
         ),
       ),
