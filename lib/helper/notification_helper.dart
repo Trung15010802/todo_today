@@ -41,11 +41,11 @@ class NotificationHelper {
     MyApp.navigatorKey.currentContext!.read<TodoBloc>().add(
           TodoDisplayDetail(id: receivedAction.id!),
         );
-    MyApp.navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (_) => const TodoDetailScreen(),
-      ),
-    );
+    MyApp.navigatorKey.currentState?.pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const TodoDetailScreen(),
+        ),
+        (route) => route.isFirst);
   }
 
   static Future<void> onNotificationDisplayedMethod(

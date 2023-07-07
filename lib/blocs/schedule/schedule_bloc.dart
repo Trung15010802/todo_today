@@ -38,7 +38,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         date: scheduledDateTime,
       ),
     );
-
     emit(ScheduleEnable());
   }
 

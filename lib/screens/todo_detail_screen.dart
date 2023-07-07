@@ -29,6 +29,7 @@ class TodoDetailScreen extends StatelessWidget {
               context.read<TodoBloc>().add(
                     TodoGetByDate(dateTime: state.todo.date),
                   );
+
               return true;
             },
             child: Scaffold(
@@ -130,8 +131,6 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
         DateTime now = DateTime.now();
         DateTime today = DateTime(now.year, now.month, now.day);
 
-        bool hasSchedule = state is! ScheduleDisable;
-
         return Visibility(
           visible: widget.todo.date.isAtSameMomentAs(today),
           child: Row(
@@ -162,19 +161,40 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
               const SizedBox(
                 width: 10,
               ),
-              Visibility(
-                visible: hasSchedule,
-                child: FloatingActionButton(
-                  heroTag: null,
-                  onPressed: () {
-                    context
-                        .read<ScheduleBloc>()
-                        .add(ScheduleCancel(id: widget.todo.id!));
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Canncel reminder successfully!')));
-                  },
-                  child: const Icon(Icons.cancel_schedule_send),
-                ),
+              FutureBuilder(
+                future: AwesomeNotifications().listScheduledNotifications(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    var data = snapshot.data;
+                    NotificationModel? noti;
+
+                    try {
+                      noti = data?.firstWhere(
+                        (noti) => widget.todo.id == noti.content!.id,
+                      );
+                    } catch (_) {
+                      //Do nothing
+                    }
+
+                    if (noti == null) {
+                    } else {
+                      return FloatingActionButton(
+                        heroTag: null,
+                        onPressed: () {
+                          context
+                              .read<ScheduleBloc>()
+                              .add(ScheduleCancel(id: widget.todo.id!));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Canncel reminder successfully!')));
+                        },
+                        child: const Icon(Icons.cancel_schedule_send),
+                      );
+                    }
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ],
           ),
