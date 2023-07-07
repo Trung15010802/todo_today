@@ -9,7 +9,6 @@ class StatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
     return BlocProvider(
       create: (context) => StatsBloc(context.read<TodoRepository>())
         ..add(
@@ -31,32 +30,21 @@ class StatsScreen extends StatelessWidget {
             int countTodoCompletedToday = state.stats['completedToday'];
 
             return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Today completion percentage',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: colorScheme.onBackground,
+                Expanded(
+                  child: PieChartTodo(
+                    title: 'Today completion percentage',
+                    countTodoCompleted: countTodoCompletedToday,
+                    totalTodo: totalTodoToday,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                PieChartTodo(
-                  countTodoCompleted: countTodoCompletedToday,
-                  totalTodo: totalTodoToday,
-                ),
-                Text(
-                  'All-time completion percentage',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: colorScheme.onBackground,
+                Expanded(
+                  child: PieChartTodo(
+                    title: 'All-time completion percentage',
+                    countTodoCompleted: countTodoCompleted,
+                    totalTodo: totalTodo,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                PieChartTodo(
-                  countTodoCompleted: countTodoCompleted,
-                  totalTodo: totalTodo,
                 ),
               ],
             );
@@ -71,30 +59,44 @@ class StatsScreen extends StatelessWidget {
 class PieChartTodo extends StatelessWidget {
   const PieChartTodo({
     super.key,
+    required this.title,
     required this.countTodoCompleted,
     required this.totalTodo,
   });
 
   final int countTodoCompleted;
   final int totalTodo;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    return CircularPercentIndicator(
-      radius: 100.0,
-      lineWidth: 10.0,
-      percent: countTodoCompleted != 0 ? countTodoCompleted / totalTodo : 0,
-      center: Text(
-        countTodoCompleted == 0
-            ? '0'
-            : '${(countTodoCompleted / totalTodo * 100).round()}%',
-        style: TextStyle(
-          fontSize: 50,
-          color: colorScheme.onBackground,
+    return Column(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 24,
+            color: colorScheme.onBackground,
+          ),
+          textAlign: TextAlign.center,
         ),
-      ),
-      progressColor: colorScheme.surfaceTint,
+        CircularPercentIndicator(
+          radius: 100.0,
+          lineWidth: 10.0,
+          percent: countTodoCompleted != 0 ? countTodoCompleted / totalTodo : 0,
+          center: Text(
+            countTodoCompleted == 0
+                ? '0'
+                : '${(countTodoCompleted / totalTodo * 100).round()}%',
+            style: TextStyle(
+              fontSize: 50,
+              color: colorScheme.onBackground,
+            ),
+          ),
+          progressColor: colorScheme.surfaceTint,
+        ),
+      ],
     );
   }
 }

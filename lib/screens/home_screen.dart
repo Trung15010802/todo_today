@@ -11,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late final DateTime today;
+  DateTime today = DateTime.now();
   @override
   void didChangeDependencies() {
     DateTime now = DateTime.now();

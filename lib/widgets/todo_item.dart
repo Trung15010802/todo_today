@@ -44,12 +44,12 @@ class TodoItem extends StatelessWidget {
         ),
       ),
       child: Container(
-        margin: const EdgeInsets.all(6),
+        margin: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: colorScheme.tertiaryContainer,
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: ListTile(
-          tileColor: colorScheme.tertiaryContainer,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
           leading: Checkbox(
             shape: const CircleBorder(),
             value: todo.isCompleted,

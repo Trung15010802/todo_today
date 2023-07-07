@@ -72,6 +72,7 @@ class TodoList extends StatelessWidget {
             ),
           ),
           Expanded(
+            flex: 1,
             child: ListView.builder(
               itemCount: todos.length,
               itemBuilder: (context, index) {
