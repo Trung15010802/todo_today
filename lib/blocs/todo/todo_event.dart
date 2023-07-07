@@ -77,8 +77,8 @@ class TodoGetByDate extends TodoEvent {
 }
 
 class TodoDisplayDetail extends TodoEvent {
-  final Todo todo;
+  final int id;
   const TodoDisplayDetail({
-    required this.todo,
+    required this.id,
   });
 }

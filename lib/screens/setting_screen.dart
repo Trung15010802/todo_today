@@ -8,6 +8,7 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
         bool isDarkMode = state.themeMode == ThemeMode.dark;
@@ -28,7 +29,7 @@ class SettingScreen extends StatelessWidget {
                   'Use system theme mode',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: colorScheme.onBackground,
                   ),
                 )
               ],

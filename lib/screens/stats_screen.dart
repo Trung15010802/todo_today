@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_today/blocs/stats/stats_bloc.dart';
-import 'package:todo_today/data/todo_repository.dart';
+import '../blocs/stats/stats_bloc.dart';
+import '../data/todo_repository.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class StatsScreen extends StatelessWidget {
@@ -9,6 +9,7 @@ class StatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return BlocProvider(
       create: (context) => StatsBloc(context.read<TodoRepository>())
         ..add(
@@ -37,7 +38,7 @@ class StatsScreen extends StatelessWidget {
                   'Today completion percentage',
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: colorScheme.onBackground,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -49,7 +50,7 @@ class StatsScreen extends StatelessWidget {
                   'All-time completion percentage',
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: colorScheme.onBackground,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -79,6 +80,7 @@ class PieChartTodo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return CircularPercentIndicator(
       radius: 100.0,
       lineWidth: 10.0,
@@ -89,10 +91,10 @@ class PieChartTodo extends StatelessWidget {
             : '${(countTodoCompleted / totalTodo * 100).round()}%',
         style: TextStyle(
           fontSize: 50,
-          color: Theme.of(context).colorScheme.onBackground,
+          color: colorScheme.onBackground,
         ),
       ),
-      progressColor: Theme.of(context).colorScheme.surfaceTint,
+      progressColor: colorScheme.surfaceTint,
     );
   }
 }

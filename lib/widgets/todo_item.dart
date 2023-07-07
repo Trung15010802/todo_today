@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_today/screens/todo_detail_screen.dart';
+import '../screens/todo_detail_screen.dart';
 
 import '../blocs/todo/todo_bloc.dart';
 import '../model/todo.dart';
@@ -15,6 +15,7 @@ class TodoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return Dismissible(
       direction: DismissDirection.endToStart,
       key: ValueKey(todo.id),
@@ -47,7 +48,7 @@ class TodoItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(6),
         child: ListTile(
-          tileColor: Theme.of(context).colorScheme.tertiaryContainer,
+          tileColor: colorScheme.tertiaryContainer,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -66,12 +67,12 @@ class TodoItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
-              color: Theme.of(context).colorScheme.onTertiaryContainer,
+              color: colorScheme.onTertiaryContainer,
             ),
           ),
           onTap: () {
             context.read<TodoBloc>().add(
-                  TodoDisplayDetail(todo: todo),
+                  TodoDisplayDetail(id: todo.id!),
                 );
             Navigator.of(context).push(
               MaterialPageRoute(

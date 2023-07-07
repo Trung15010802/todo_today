@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:todo_today/data/todo_repository.dart';
+import '../../data/todo_repository.dart';
 
 part 'stats_event.dart';
 part 'stats_state.dart';

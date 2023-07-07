@@ -2,7 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:todo_today/model/todo.dart';
+import '../model/todo.dart';
 
 import '../blocs/schedule/schedule_bloc.dart';
 import '../blocs/todo/todo_bloc.dart';
@@ -13,6 +13,7 @@ class TodoDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return BlocBuilder<TodoBloc, TodoState>(
       builder: (context, state) {
         if (state is TodoLoading) {
@@ -31,7 +32,7 @@ class TodoDetailScreen extends StatelessWidget {
               return true;
             },
             child: Scaffold(
-              backgroundColor: Theme.of(context).colorScheme.background,
+              backgroundColor: colorScheme.background,
               appBar: AppBar(
                 title: const Text('Todo'),
                 centerTitle: false,
@@ -64,7 +65,7 @@ class TodoDetailScreen extends StatelessWidget {
                 builder: (context) {
                   return SingleChildScrollView(
                     child: ListTile(
-                      tileColor: Theme.of(context).colorScheme.surface,
+                      tileColor: colorScheme.surface,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
@@ -76,13 +77,12 @@ class TodoDetailScreen extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onBackground),
+                            color: colorScheme.onBackground),
                       ),
                       subtitle: SelectableText(
                         state.todo.description ?? '',
                         style: TextStyle(
-                            fontSize: 20,
-                            color: Theme.of(context).colorScheme.onBackground),
+                            fontSize: 20, color: colorScheme.onBackground),
                       ),
                     ),
                   );

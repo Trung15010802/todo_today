@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_today/widgets/todo_list.dart';
+import '../widgets/todo_list.dart';
 
 import '../blocs/todo/todo_bloc.dart';
 

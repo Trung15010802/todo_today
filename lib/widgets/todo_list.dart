@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:todo_today/widgets/todo_item.dart';
+import 'todo_item.dart';
 
 import '../blocs/todo/todo_bloc.dart';
 import '../model/todo.dart';
@@ -25,6 +25,7 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return RefreshIndicator(
       onRefresh: () async => onRefresh,
       child: Column(
@@ -35,8 +36,7 @@ class TodoList extends StatelessWidget {
               ChoiceChip(
                 label: Text(
                   'All',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground),
+                  style: TextStyle(color: colorScheme.onBackground),
                 ),
                 selected: todoListType == TodoListType.all,
                 onSelected: (value) {
@@ -46,8 +46,7 @@ class TodoList extends StatelessWidget {
               ChoiceChip(
                 label: Text(
                   'Completed',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground),
+                  style: TextStyle(color: colorScheme.onBackground),
                 ),
                 selected: todoListType == TodoListType.complete,
                 onSelected: (value) {
@@ -57,8 +56,7 @@ class TodoList extends StatelessWidget {
               ChoiceChip(
                 label: Text(
                   'Uncompleted',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground),
+                  style: TextStyle(color: colorScheme.onBackground),
                 ),
                 selected: todoListType == TodoListType.uncomplete,
                 onSelected: (value) {

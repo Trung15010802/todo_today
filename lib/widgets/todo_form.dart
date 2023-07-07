@@ -19,8 +19,10 @@ class _TodoFormState extends State<TodoForm> {
   final _formKey = GlobalKey<FormState>();
   late String title;
   String? description;
+
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -32,7 +34,7 @@ class _TodoFormState extends State<TodoForm> {
                 'Add new todo',
                 style: TextStyle(
                   fontSize: 24,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: colorScheme.onBackground,
                 ),
               ),
               Padding(
@@ -40,7 +42,7 @@ class _TodoFormState extends State<TodoForm> {
                 child: TextFormField(
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: colorScheme.onBackground,
                   ),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(10),
@@ -69,7 +71,7 @@ class _TodoFormState extends State<TodoForm> {
                   maxLines: 3,
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: colorScheme.onBackground,
                   ),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(10),

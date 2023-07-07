@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_today/screens/history_screen.dart';
+import 'history_screen.dart';
 import '../blocs/bottom_nav/bottom_nav_bloc.dart';
 import '../widgets/todo_form.dart';
 import 'setting_screen.dart';
@@ -13,26 +13,27 @@ class TabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: colorScheme.background,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
           'Todo Today',
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          style: TextStyle(color: colorScheme.onPrimary),
         ),
         actions: [
           IconButton(
             icon: Icon(
-              Icons.info,
-              color: Theme.of(context).colorScheme.onPrimary,
+              Icons.help,
+              color: colorScheme.onPrimary,
             ),
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text("How to delete a task"),
+                    title: const Text("Tutorial"),
                     content: const Text(
                         "Swipe from right to left to delete a task.\nTap on a todo to view details."),
                     actions: [
@@ -49,13 +50,13 @@ class TabScreen extends StatelessWidget {
             },
           ),
         ],
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: colorScheme.primary,
       ),
       bottomNavigationBar: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
           return BottomNavigationBar(
             type: BottomNavigationBarType.shifting,
-            fixedColor: Theme.of(context).colorScheme.primary,
+            fixedColor: colorScheme.primary,
             unselectedItemColor: Colors.grey,
             items: const [
               BottomNavigationBarItem(

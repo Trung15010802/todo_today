@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         const Expanded(
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           "There is no todo here yet!",
                           style: TextStyle(
                             fontSize: 16,
-                            color: Theme.of(context).colorScheme.onBackground,
+                            color: colorScheme.onBackground,
                           ),
                         ),
                       ),
@@ -107,10 +108,11 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       child: TextField(
-        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        style: TextStyle(color: colorScheme.onBackground),
         controller: _controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(

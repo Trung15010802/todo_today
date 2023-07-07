@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/todo_repository.dart';
-
 import '../../model/todo.dart';
 
 part 'todo_event.dart';
@@ -100,7 +99,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Future<FutureOr<void>> _displayDetail(
       TodoDisplayDetail event, Emitter<TodoState> emit) async {
-    final todo = await todoRepository.getTodo(event.todo);
+    final todo = await todoRepository.getTodo(event.id);
     emit(TodoDetailTodo(todo: todo));
   }
 }

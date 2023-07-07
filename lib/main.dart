@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:todo_today/blocs/schedule/schedule_bloc.dart';
-import 'package:todo_today/blocs/theme/theme_bloc.dart';
+import 'blocs/schedule/schedule_bloc.dart';
+import 'blocs/theme/theme_bloc.dart';
 
-import 'package:todo_today/themes/theme_data.dart';
+import 'themes/theme_data.dart';
 import 'blocs/todo/todo_bloc.dart';
 import 'data/todo_repository.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'blocs/bottom_nav/bottom_nav_bloc.dart';
+import 'helper/notification_helper.dart';
 import 'screens/tab_screen.dart';
 
 void main() async {
@@ -18,37 +18,13 @@ void main() async {
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
-  notificationInit();
+  NotificationHelper.notificationInit();
   runApp(const MyApp());
-}
-
-Future<void> notificationInit() async {
-  await AwesomeNotifications().initialize(
-    'resource://mipmap/launcher_icon',
-    [
-      NotificationChannel(
-        channelGroupKey: 'basic_channel_group',
-        channelKey: 'basic_channel',
-        channelName: 'Basic notifications',
-        channelDescription: 'Notification channel for basic tests',
-        importance: NotificationImportance.High,
-        playSound: true,
-        criticalAlerts: true,
-        locked: true,
-      )
-    ],
-    channelGroups: [
-      NotificationChannelGroup(
-          channelGroupKey: 'basic_channel_group',
-          channelGroupName: 'Basic group')
-    ],
-    debug: false,
-  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
@@ -84,6 +60,8 @@ class MyApp extends StatelessWidget {
         child: BlocBuilder<ThemeBloc, ThemeState>(
           builder: (context, state) {
             return MaterialApp(
+              navigatorKey: navigatorKey,
+              debugShowCheckedModeBanner: false,
               themeMode: state.themeMode,
               theme: appThemeData[AppTheme.light],
               darkTheme: appThemeData[AppTheme.dark],

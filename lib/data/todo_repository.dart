@@ -18,7 +18,6 @@ class TodoRepository {
 
   Future<void> addTodo(Todo todo) async {
     final db = await _getDb();
-
     db.insert(
       'Todos',
       todo.toMap(),
@@ -75,12 +74,12 @@ class TodoRepository {
     );
   }
 
-  Future<Todo> getTodo(Todo todo) async {
+  Future<Todo> getTodo(int id) async {
     final db = await _getDb();
     final result = await db.query(
       'Todos',
       where: 'id = ?',
-      whereArgs: [todo.id],
+      whereArgs: [id],
     );
     return Todo.fromMap(result.first);
   }
