@@ -32,8 +32,8 @@ class NotificationHelper {
     );
 
     await AwesomeNotifications().setListeners(
-      onActionReceivedMethod: onActionReceivedMethod,
-    );
+        onActionReceivedMethod: onActionReceivedMethod,
+        onNotificationDisplayedMethod: onNotificationDisplayedMethod);
   }
 
   static Future<void> onActionReceivedMethod(
@@ -46,9 +46,13 @@ class NotificationHelper {
         builder: (_) => const TodoDetailScreen(),
       ),
     );
+  }
 
+  static Future<void> onNotificationDisplayedMethod(
+      ReceivedNotification receivedNotification) async {
+    Future.delayed(const Duration(seconds: 5));
     MyApp.navigatorKey.currentContext!
         .read<ScheduleBloc>()
-        .add(ScheduleCancel(id: receivedAction.id!));
+        .add(ScheduleCancel(id: receivedNotification.id!));
   }
 }

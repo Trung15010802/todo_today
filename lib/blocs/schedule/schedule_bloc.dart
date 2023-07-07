@@ -44,7 +44,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
   Future<FutureOr<void>> _scheduleCancer(
       ScheduleCancel event, Emitter<ScheduleState> emit) async {
-    await AwesomeNotifications().cancel(event.id);
+    await AwesomeNotifications().cancelSchedule(event.id);
     emit(ScheduleDisable());
   }
 }
