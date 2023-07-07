@@ -127,6 +127,8 @@ class _SearchBarState extends State<SearchBar> {
             },
           ),
         ),
+        onSubmitted: (value) =>
+            context.read<TodoBloc>().add(TodoSearchByTitle(searchTerm: value)),
       ),
     );
   }
